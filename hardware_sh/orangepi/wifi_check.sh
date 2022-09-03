@@ -3,11 +3,7 @@
 # def wifi_check
 
 wifi_check_fn(){
-    while :
-    do
-        /var/pub_sh/wifi_init.sh > /var/pub_sh/log/wifi_init.log
-        sleep 60s;
-    done
+    /var/pub_sh/wifi_init.sh > /var/pub_sh/log/wifi_init.log
 }
 
 # runner
