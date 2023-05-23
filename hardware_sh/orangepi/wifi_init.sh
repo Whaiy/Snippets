@@ -12,19 +12,19 @@
 
 # self ip
 
-target_self_ip="x.x.x.x"
-debug_self_ip="x.x.x.x"
+target_self_ip="target_ip"
+debug_self_ip="debug_ip"
 
 
 # router profile
 
-target_router_ip="x.x.x.x"
-target_router_ssid="yy"
-target_wifi_pass="*****"
+target_router_ip="target_router_ip"
+target_router_ssid="wifi_name"
+target_wifi_pass="target_wifi_pass"
 
-debug_router_ip="x.x.x.x"
-debug_router_ssid="yyyyyyy"
-debug_wifi_pass="****"
+debug_router_ip="debug_route_ip"
+debug_router_ssid="debut_route_wifi_name"
+debug_wifi_pass="debug_wifi_pass"
 
 
 # network test tmp data profile
@@ -46,26 +46,37 @@ init_wifi_fn(){ # ssid password ipv4addr ipvsgw
 # def test_wifi
 
 test_wifi_fn(){ # router_ip
-    ping -c 2 -w 8 $1 > $ping_log
+    ping -c 2 -w 6 $1
+}
+
+
+dns_fix_fn(){
+        printf "nameserver 114.114.114.114\nnameserver 8.8.8.8" > /etc/resolv.conf
 }
 
 
 # runner
 
 # test target
-echo "test terget"
-test_wifi_fn $target_router_ip
+date
+echo "first test terget"
+test_wifi_fn $target_router_ip > $ping_log
+test_wifi_fn $debug_router_ip >> $ping_log
+
 if [ `grep -c "$ping_suc_flag" $ping_log` -eq '0' ]; then
-    # init target
-echo "init target"
+    date
+    echo "init target"
     init_wifi_fn $target_router_ssid $target_wifi_pass $target_self_ip $target_router_ip
-echo "test target"
-    # test target
-    test_wifi_fn $target_router_ip
-    elif [ `grep -c "$ping_suc_flag" $ping_log` -eq '0' ]; then
-echo "init debug"
-        # init debug
+    dns_fix_fn
+    date
+    echo "test target"
+    test_wifi_fn $target_router_ip > $ping_log
+    if [ `grep -c "$ping_suc_flag" $ping_log` -eq '0' ]; then
+        date
+        echo "init debug"
         init_wifi_fn $debug_router_ssid $debug_wifi_pass $debug_self_ip $debug_router_ip
+        dns_fix_fn
+    fi
 fi
 
 
