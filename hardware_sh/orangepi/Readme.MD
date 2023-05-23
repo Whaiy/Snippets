@@ -9,7 +9,7 @@
 ## 环境
 
 orangepi zero2
-nmcli crontab
+nmcli
 
 ## 部署
 
@@ -17,6 +17,9 @@ nmcli crontab
 mkdir -p /var/pub_sh/log
 cp wifi_check.sh wifi_init.sh /var/pub_sh/
 
-echo '* * * * * /var/pub_sh/wifi_check.sh' >> /etc/crontab
+cp wifi_check.service /etc/systemd/system/
 
+systemctl daemon-reload
+
+systemctl enable wifi_check.service
 ```
