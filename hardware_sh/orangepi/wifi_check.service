@@ -1,0 +1,12 @@
+[Unit]
+Description=wifi check
+After=NetworkManager.service       
+
+[Service]
+ExecStart=/var/pub_sh/wifi_check.sh
+Restart=always
+RestartSec=30
+Type=forking
+
+[Install]
+WantedBy=multi-user.target
